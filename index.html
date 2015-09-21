@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<title>TREM</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">		
+		<link rel="stylesheet" href="style.css" type="text/css">
+	</head>
+	<body>
+		<div class="container">
+			<div class="header clearfix">
+				<nav>
+					<ul class="nav nav-pills pull-right">
+						<li role="presentation"><a href="#" data-toggle="modal" data-target="#about" data-keyboard="true">About</a></li>
+					</ul>
+				</nav>
+				<h3 class="text-muted">TREM - Tiny Regular Expression Matcher</h3>
+			</div>
+				
+			<form name="reform" role="form" onsubmit="return false;">
+				<div class="form-group">
+					<label>Text</label>
+					<textarea class="form-control" rows="5" name="text" id="text" placeholder="source text"></textarea>
+				</div>
+				<div class="form-group">
+					<label>Regular Expression</label>
+					<input type="text" class="form-control" name="re" id="re" placeholder="regular expression with capture groups">
+				</div>
+				<div class="form-group">
+					<button type="button" class="btn btn-primary" id="parse">Parse</button>
+					<label class="checkbox-inline"><input type="checkbox" name="ignorecase" checked>Ignore case</label>
+					<label class="checkbox-inline"><input type="checkbox" name="joingroups" checked>Join capture groups</label>
+				</div>
+				<div class="form-group">
+					<label>Result</label>
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<ul id="result" class="list-group">
+								
+							</ul>
+						</div>
+					</div>
+				</div>
+			</form>
+			
+			<footer class="footer">
+				<p>Get <a href="https://github.com/pagotti/trem" target="_blank">source</a> at Github</p>
+				<p>Learn Regular Expression on <a href="http://www.regexr.com/" target="_blank">RegExr</a></p>
+			</footer>
+
+			<!-- About -->
+			<div class="modal fade" id="about" role="dialog">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<div class="modal-header bg-primary">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">TREM</h4>
+						</div>
+						<div class="modal-body">
+							<p>This is a exercise for my 2015 web development class at UDESC.</p>
+							<p>I wrote this simple page because I can't find a tool like this on the web.</p>
+							<p><span class="glyphicon glyphicon-copyright-mark"></span> <a href="http://br.linkedin.com/in/pagotti">Vagner Pagotti</a></p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+				
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			$("#parse").on("click", function(){
+				var reOptions = "gm";
+				if (reform.ignorecase.checked)
+					reOptions += "i";
+				var re = new RegExp($("#re").val(), reOptions);
+				var data = $("#text").val();
+				if (data.length > 0) {
+					var match = re.exec(data);
+					var result = [];
+					while (match !== null) {
+						if (match.length > 1)
+							for(i=1;i<match.length;i++)
+								result.push(match[i]);
+						else
+							result.push(match[0]);
+						match = re.exec(data);
+					}
+				}
+				$("#result").empty();
+				if (reform.joingroups.checked) {
+					$("#result").append("<li class='list-group-item'>" + result.join(" ") + "</li>");
+				} else {
+					result.forEach(function(v, i, a){
+						$("#result").append("<li class='list-group-item'>" + v + "</li>");
+						});
+				}
+			});
+		});
+		</script>
+		
+	</body>
+	
+</html>
+
